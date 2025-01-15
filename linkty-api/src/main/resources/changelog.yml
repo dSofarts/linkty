@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.1
+      author: Dronov Egor
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: 'uuid_generate_v4()'
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: link
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: 'uuid_generate_v4()'
+              - column:
+                  name: link
+                  type: varchar(2000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_link
+                  type: varchar(8)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expired
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: limit_redirect
+                  type: number
+              - column:
+                  name: usages
+                  type: int
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_valid
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_link_user
+                    references: user(id)
+                    onDelete: CASCADE
+                    nullable: false

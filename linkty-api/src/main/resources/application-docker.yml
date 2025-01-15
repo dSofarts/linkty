@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  devtools:
+    livereload:
+      enabled: false
+  liquibase:
+    change-log: classpath:changelog.yml
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
+    properties:
+      hibernate:
+        default_schema: public
+
+request-validation:
+  consumers:
+    - service-name: "linkty-front"
+      always-allowed: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+
+masking:
+  max-showed-chars: 20
+  show-boolean-fields: true
+  not-masking-keys: [ "id", "error", "status", "statusCode", "code", "type", "expired",
+                      "operationId", "objectId", "userId", "shortLink", "url", "service-name",
+                      "maxLimit", "link"]
