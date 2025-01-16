@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeDeserializer extends StdDeserializer<ZonedDateTime> {
 
+  public TimeDeserializer() {
+    super(ZonedDateTime.class);
+  }
+
   protected TimeDeserializer(Class<?> vc) {
     super(vc);
   }

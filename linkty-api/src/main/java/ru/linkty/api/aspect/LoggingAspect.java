@@ -78,7 +78,7 @@ public class LoggingAspect {
 
     ResponseEntity<?> response;
     try {
-      if (!endpoint.contains("/c/")) {
+      if (!endpoint.contains("/redirect/")) {
         validationRequestHeaders(requestHeaders);
       }
       response = (ResponseEntity) joinPoint.proceed(args);

@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.linkty.api.annotation.LoggingUsed;
 import ru.linkty.api.constant.Constants;
 import ru.linkty.api.controller.api.LinkControllerApi;
+import ru.linkty.api.controller.validator.CreateLinkValidator;
+import ru.linkty.api.controller.validator.DeleteLinkValidator;
 import ru.linkty.api.controller.validator.MainValidator;
+import ru.linkty.api.controller.validator.UpdateLinkValidator;
 import ru.linkty.api.dto.request.CreateLinkRequest;
 import ru.linkty.api.dto.request.DeleteLinkRequest;
 import ru.linkty.api.dto.request.UpdateLinkRequest;
 import ru.linkty.api.dto.response.FrontResponse;
 import ru.linkty.api.dto.response.LinkResponse;
 import ru.linkty.api.dto.response.LinksResponse;
+import ru.linkty.api.dto.response.RedirectResponse;
 import ru.linkty.api.service.LinkService;
 
 @Slf4j
@@ -36,7 +40,7 @@ public class LinkController implements LinkControllerApi {
   public ResponseEntity<LinkResponse> createLink(
       @RequestHeader Map<String, String> requestHeaders,
       @RequestBody CreateLinkRequest requestBody) {
-    mainValidator.validateRequest(requestHeaders);
+    mainValidator.validateRequest(requestBody, CreateLinkValidator.class, requestHeaders);
     return ResponseEntity.ok(linkService.createLink(requestHeaders
         .get(Constants.USER_ID_HEADER), requestBody));
   }
@@ -47,7 +51,7 @@ public class LinkController implements LinkControllerApi {
   public ResponseEntity<LinkResponse> updateLink(
       @RequestHeader Map<String, String> requestHeaders,
       @RequestBody UpdateLinkRequest requestBody) {
-    mainValidator.validateRequest(requestHeaders);
+    mainValidator.validateRequest(requestBody, UpdateLinkValidator.class, requestHeaders);
     return ResponseEntity.ok(linkService.updateLink(requestHeaders
         .get(Constants.USER_ID_HEADER), requestBody));
   }
@@ -58,7 +62,7 @@ public class LinkController implements LinkControllerApi {
   public ResponseEntity<FrontResponse> deleteLink(
       @RequestHeader Map<String, String> requestHeaders,
       @RequestBody DeleteLinkRequest requestBody) {
-    mainValidator.validateRequest(requestHeaders);
+    mainValidator.validateRequest(requestBody, DeleteLinkValidator.class, requestHeaders);
     return ResponseEntity.ok(new FrontResponse());
   }
 
@@ -70,5 +74,12 @@ public class LinkController implements LinkControllerApi {
     mainValidator.validateRequest(requestHeaders);
     return ResponseEntity.ok(linkService.getLinks(requestHeaders
         .get(Constants.USER_ID_HEADER)));
+  }
+
+  @Override
+  @SneakyThrows
+  @LoggingUsed(endpoint = "/links/redirect/{}")
+  public ResponseEntity<RedirectResponse> getRedirectLink(String shortLink) {
+    return ResponseEntity.ok(linkService.getRedirectLink(shortLink));
   }
 }

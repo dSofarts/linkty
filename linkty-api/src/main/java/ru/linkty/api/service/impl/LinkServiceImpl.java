@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class LinkServiceImpl implements LinkService {
 
   private final LinkRepository linkRepository;
   private final UserRepository userRepository;
+  @Value("${link.expired:1}")
+  private Integer expiredDays;
 
   @Override
   public LinkResponse createLink(@Nullable String userId, CreateLinkRequest linkRequest) {
@@ -45,18 +48,24 @@ public class LinkServiceImpl implements LinkService {
 
     Link link = user.getLinks().stream().filter(s -> s.getLink().equals(linkRequest.getLink()))
         .findFirst().orElse(null);
-    return link == null ? generateLink(user, linkRequest.getLink(), linkRequest.getLimit()) : LinkResponse.builder()
+    return link == null ? generateLink(user, linkRequest) : LinkResponse.builder()
         .userId(user.getId().toString())
         .shortLink(link.getShortLink()).build();
   }
 
-  private LinkResponse generateLink(User user, String link, Integer maxLimit) {
+  private LinkResponse generateLink(User user, CreateLinkRequest linkRequest) {
+    ZonedDateTime expired =
+        ZonedDateTime.now().plusDays(expiredDays).isAfter(linkRequest.getExpired())
+            ? linkRequest.getExpired() : ZonedDateTime.now().plusDays(expiredDays);
+
     Link l = linkRepository.save(Link.builder()
-        .limitRedirect(maxLimit)
-        .link(link)
+        .limitRedirect(linkRequest.getLimit())
+        .link(linkRequest.getLink())
+        .expired(expired)
         .user(user)
         .shortLink(generateShortLink()).build());
     return LinkResponse.builder()
+        .expired(expired)
         .shortLink(l.getShortLink())
         .userId(user.getId().toString()).build();
   }

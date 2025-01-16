@@ -34,8 +34,7 @@ public class Link {
   private String link;
   private String shortLink;
   @Column(nullable = false)
-  @Builder.Default
-  private ZonedDateTime expired = ZonedDateTime.now().plusDays(7);
+  private ZonedDateTime expired;
   @Column(nullable = false)
   @Builder.Default
   private ZonedDateTime created = ZonedDateTime.now();
@@ -45,5 +44,5 @@ public class Link {
   private Integer usages = 0;
   @Column(nullable = false)
   @Builder.Default
-  private boolean isValid = true;
+  private boolean valid = true;
 }

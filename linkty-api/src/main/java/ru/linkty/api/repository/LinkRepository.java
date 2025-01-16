@@ -11,4 +11,6 @@ public interface LinkRepository extends JpaRepository<Link, UUID> {
   Optional<Link> findByShortLink(String shortLink);
 
   void deleteAllByExpiredBefore(ZonedDateTime expiredBefore);
+
+  void deleteAllByValidFalse();
 }

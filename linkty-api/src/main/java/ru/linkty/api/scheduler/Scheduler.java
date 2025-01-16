@@ -17,5 +17,6 @@ public class Scheduler {
   @Scheduled(fixedRate = 3600000) // Запуск раз в час
   public void cleanupExpiredLinks() {
     linkRepository.deleteAllByExpiredBefore(ZonedDateTime.now());
+    linkRepository.deleteAllByValidFalse();
   }
 }

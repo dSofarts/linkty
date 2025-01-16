@@ -62,7 +62,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: is_valid
+                  name: valid
                   type: boolean
                   constraints:
                     nullable: false
