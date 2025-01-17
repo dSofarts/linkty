@@ -2,6 +2,7 @@ package ru.linkty.api.properties;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,11 +19,11 @@ public class RequestValidationProperties {
 
   private List<Consumer> consumers;
 
-  public void validateRequest(Map<String, String> headers) {
-    validateRequestHeaders(headers);
+  public void validateRequest(Map<String, String> headers, boolean needsAuth) {
+    validateRequestHeaders(headers, needsAuth);
   }
 
-  private void validateRequestHeaders(Map<String, String> headers) {
+  private void validateRequestHeaders(Map<String, String> headers, boolean needsAuth) {
     if (!headers.containsKey(Constants.SERVICE_NAME)) {
       throw new ValidationException(String.format("Required header not specified %s",
           Constants.SERVICE_NAME), HttpStatus.UNAUTHORIZED);
@@ -34,6 +35,17 @@ public class RequestValidationProperties {
               headers.get(Constants.SERVICE_NAME)), HttpStatus.FORBIDDEN);
     }
 
+    if (needsAuth) {
+      if (!headers.containsKey(Constants.USER_ID_HEADER)) {
+        throw new ValidationException(String.format("Required header not specified %s",
+            Constants.USER_ID_HEADER), HttpStatus.UNAUTHORIZED);
+      }
+      try {
+        UUID.fromString(headers.get(Constants.USER_ID_HEADER));
+      } catch (Exception e) {
+        throw new ValidationException("User id is not valid", HttpStatus.FORBIDDEN);
+      }
+    }
   }
 
   private Consumer findActiveConsumer(String serviceName) {

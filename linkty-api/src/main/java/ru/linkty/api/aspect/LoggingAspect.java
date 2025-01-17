@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.linkty.api.annotation.LoggingUsed;
-import ru.linkty.api.annotation.ShortLink;
+import ru.linkty.api.annotation.ObjectId;
 import ru.linkty.api.constant.Constants;
 import ru.linkty.api.exception.NotFoundException;
 import ru.linkty.api.exception.ValidationException;
@@ -63,7 +63,7 @@ public class LoggingAspect {
         if (annotation.annotationType().equals(RequestBody.class)) {
           requestBody = args[i];
         }
-        if (annotation.annotationType().equals(ShortLink.class)) {
+        if (annotation.annotationType().equals(ObjectId.class)) {
           shortLink = (String) args[i];
         }
       }

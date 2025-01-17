@@ -17,10 +17,6 @@ public class CreateLinkValidator implements Validator {
   public void validate(Object target, Errors errors) {
     CreateLinkRequest request = (CreateLinkRequest) target;
     ValidationUtils.rejectIfEmpty(errors, "link", "link");
-    if (request.getLink() != null && (!request.getLink().contains("http://")
-        || !request.getLink().contains("https://"))) {
-      errors.reject("link", "link");
-    }
     ValidationUtils.rejectIfEmpty(errors, "expired", "expired");
     if (request.getExpired() != null && request.getExpired().isBefore(ZonedDateTime.now())) {
       errors.reject("expired", "expired");

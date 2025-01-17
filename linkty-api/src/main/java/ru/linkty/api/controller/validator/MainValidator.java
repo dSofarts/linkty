@@ -26,12 +26,22 @@ public class MainValidator {
 
   public void validateRequest(Object requestBody,
       Class<?> validatorClass, Map<String, String> requestHeaders) {
-    requestValidationProperties.validateRequest(requestHeaders);
+    requestValidationProperties.validateRequest(requestHeaders, false);
+    validateFields(requestBody, validatorClass);
+  }
+
+  public void validateRequest(Object requestBody,
+      Class<?> validatorClass, Map<String, String> requestHeaders, boolean needAuth) {
+    requestValidationProperties.validateRequest(requestHeaders, needAuth);
     validateFields(requestBody, validatorClass);
   }
 
   public void validateRequest(Map<String, String> requestHeaders) {
-    requestValidationProperties.validateRequest(requestHeaders);
+    requestValidationProperties.validateRequest(requestHeaders, false);
+  }
+
+  public void validateRequest(Map<String, String> requestHeaders, boolean needAuth) {
+    requestValidationProperties.validateRequest(requestHeaders, needAuth);
   }
 
   private void validateFields(Object requestBody, Class<?> validatorClass) {
