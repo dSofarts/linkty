@@ -1,0 +1,4 @@
+<h1 *ngIf="redirect()" class="status-text">Ожидайте перехода</h1>
+<h1 *ngIf="!redirect()" class="status-text">
+  Ссылка не действительна <a [routerLink]="['/']">вернуться</a>
+</h1>
